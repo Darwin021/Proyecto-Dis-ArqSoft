@@ -5,9 +5,12 @@
 package Proyecto;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -25,7 +28,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
+import java.sql.SQLException;
+import javax.swing.Icon;
 /**
  *
  * @author Warwin02
@@ -34,12 +38,11 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
 
     private FileInputStream fis;
     private int longitudBytes;
-    Conexion cx;
-    Date fechaHora;
+    Conexion cx,cx2,cx3,cx4;
     
     public Actividades() {
         initComponents();
-        this.setSize(578, 546);
+        this.setSize(791, 561);
         this.setLocationRelativeTo(null);
         this.setTitle("Servicios");
         this.setResizable(false);
@@ -57,9 +60,6 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         jMenu3 = new javax.swing.JMenu();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
-        TxtServicio = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        TxtNombreServicio = new javax.swing.JTextField();
         IDColonia = new javax.swing.JLabel();
         TxtColonia = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -67,15 +67,16 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         Visor = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         TxtFechaHora = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        TxtDuracion = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        TxtDescripcion = new javax.swing.JTextArea();
+        TxtObservacion = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
         LblFoto = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        TxtNCuadrilla = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listServicio = new javax.swing.JList<>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         MBuscar = new javax.swing.JMenu();
         MAgregar = new javax.swing.JMenu();
@@ -94,9 +95,6 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("ID_Servicio");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel2.setText("Nombre_Servicio");
-
         IDColonia.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         IDColonia.setText("ID_Colonia");
 
@@ -104,13 +102,15 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
 
         Visor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
             }
         ));
         jScrollPane1.setViewportView(Visor);
@@ -118,18 +118,15 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Fecha/Hora");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setText("Duracion");
-
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setText("Descripcion");
+        jLabel6.setText("Observaciones");
 
-        TxtDescripcion.setColumns(20);
-        TxtDescripcion.setRows(5);
-        jScrollPane2.setViewportView(TxtDescripcion);
+        TxtObservacion.setColumns(20);
+        TxtObservacion.setRows(5);
+        jScrollPane2.setViewportView(TxtObservacion);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Click en el recuadro para agregar la imagen:");
+        jLabel7.setText("Click en el recuadro ");
 
         LblFoto.setFont(new java.awt.Font("Comic Sans MS", 3, 36)); // NOI18N
         LblFoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -141,8 +138,19 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel8.setText("N Cuadrilla");
+        listServicio.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "1", "2", "3", "4", "5", "6", "7" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(listServicio);
+
+        jLabel3.setFont(new java.awt.Font("Comic Sans MS", 3, 14)); // NOI18N
+        jLabel3.setText("para agregar la imagen:");
+
+        jLabel2.setText("Contamos con 1523 colonias puedes consultar en el boton para");
+
+        jLabel5.setText(" asegurar que la informacion sea la correcta");
 
         MBuscar.setText("Buscar");
         MBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -161,9 +169,19 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         jMenuBar1.add(MAgregar);
 
         MEditar.setText("Editar");
+        MEditar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MEditarMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(MEditar);
 
         MBorrar.setText("Borrar");
+        MBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MBorrarMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(MBorrar);
 
         MRegresar.setText("Regresar");
@@ -183,91 +201,85 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TxtNombreServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4))
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(TxtDuracion, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TxtFechaHora, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(IDColonia)
                         .addGap(18, 18, 18)
                         .addComponent(TxtColonia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2))
+                        .addContainerGap(15, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(22, 22, 22)
+                                .addComponent(jLabel4)
+                                .addGap(32, 32, 32)
+                                .addComponent(TxtFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(TxtNCuadrilla, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel7)
-                                .addContainerGap())))))
+                                .addGap(161, 161, 161))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(TxtServicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(TxtFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4)
+                            .addComponent(TxtFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(TxtNombreServicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(TxtDuracion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(TxtNCuadrilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel6)
+                        .addGap(143, 143, 143)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(IDColonia)
+                            .addComponent(TxtColonia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addGap(57, 57, 57)
-                        .addComponent(jLabel6)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jLabel2))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(IDColonia)
-                    .addComponent(TxtColonia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void MBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MBuscarMouseClicked
-        
+        Buscar();
     }//GEN-LAST:event_MBuscarMouseClicked
 
     private void LblFotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LblFotoMouseClicked
@@ -298,6 +310,16 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         // TODO add your handling code here:
         Agregar();
     }//GEN-LAST:event_MAgregarMouseClicked
+
+    private void MEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MEditarMouseClicked
+        // TODO add your handling code here:
+        Editar();
+    }//GEN-LAST:event_MEditarMouseClicked
+
+    private void MBorrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MBorrarMouseClicked
+        // TODO add your handling code here:
+        Borrar();
+    }//GEN-LAST:event_MBorrarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -347,36 +369,33 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
     private javax.swing.JMenu MRegresar;
     private javax.swing.JMenu MSalir;
     private javax.swing.JTextField TxtColonia;
-    private javax.swing.JTextArea TxtDescripcion;
-    private javax.swing.JTextField TxtDuracion;
     private javax.swing.JTextField TxtFechaHora;
-    private javax.swing.JTextField TxtNCuadrilla;
-    private javax.swing.JTextField TxtNombreServicio;
-    private javax.swing.JTextField TxtServicio;
+    private javax.swing.JTextArea TxtObservacion;
     private javax.swing.JTable Visor;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<String> listServicio;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void Agregar() {
-        if (TxtServicio.getText().equals("") || TxtFechaHora.getText().equals("") || TxtNombreServicio.getText().equals("") || TxtDuracion.getText().equals("") || TxtDescripcion.getText().equals("") || TxtColonia.getText().equals("")){
+        if (listServicio.getSelectedValue().equals("") || TxtFechaHora.getText().equals("") ||  TxtObservacion.getText().equals("") || TxtColonia.getText().equals("")){
           JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
         }else{
-          int Servicio, Colonia,NCuadrilla;
-          float Duracion;
-          String FechaHora,Nombre,Descripcion;
+          int Servicio, Colonia;    
+          String FechaHora,Observaciones;
           
         // Definir el formato de fecha y hora que esperas
          FechaHora=TxtFechaHora.getText().trim();
@@ -384,29 +403,24 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         // Definir el formato de fecha que esperas
         
         
-         Servicio=Integer.parseInt(TxtServicio.getText().trim());
-         NCuadrilla=Integer.parseInt(TxtNCuadrilla.getText().trim());
+         Servicio=Integer.parseInt(listServicio.getSelectedValue());
          Colonia=Integer.parseInt(TxtColonia.getText().trim());
-         Nombre = TxtNombreServicio.getText().trim();
-         Duracion = Float.parseFloat(TxtDuracion.getText().trim());
-         Descripcion = TxtDescripcion.getText().trim();
+         Observaciones = TxtObservacion.getText().trim();
             
          try{
              
-             cx=new Conexion("proyecto");
+             cx=new Conexion("proyecto2");
              Connection cn=cx.Conectar();
-             PreparedStatement pst = cn.prepareStatement("insert into servicio_limpieza values (?,?,?,?,?,?,?,?)");
+             PreparedStatement pst = cn.prepareStatement("insert into limpieza values (?,?,?,?,?)");
              pst.setInt(1,Servicio);
-             pst.setString(2,Nombre);
-             pst.setInt(3, NCuadrilla);
-             pst.setInt(4, Colonia);
-             pst.setString(5, FechaHora);
-             pst.setFloat(6, Duracion);
-             pst.setString(7, Descripcion);
-             pst.setBlob(8, fis, longitudBytes);
+             pst.setInt(2, Colonia);
+             pst.setString(3, FechaHora);
+             pst.setString(4, Observaciones);
+             pst.setBlob(5, fis, longitudBytes);
              
              pst.executeUpdate();
              cn.close();
+             JOptionPane.showMessageDialog(null, "El registro fue insertado con exito");
              Limpiar();
              
          }catch(SQLException e){
@@ -418,29 +432,138 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
     }
     @Override
     public void Buscar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio y insertar una colonia");
+        }else{
+            
+            try{
+               String id_s = "";
+               String id_c = "";
+               
+               id_s = listServicio.getSelectedValue();
+               id_c = TxtColonia.getText().trim();
+               //parseo
+               int Servicio,Colonia;
+               
+               Servicio = Integer.parseInt(id_s);
+               Colonia = Integer.parseInt(id_c);
+               
+               cx2= new Conexion("Proyecto2");
+               Connection cn2=cx2.Conectar();
+               PreparedStatement pst = cn2.prepareStatement("select * from limpieza where ID_SERVICIO = '" + Servicio + "' AND ID_COLONIAS = '" + Colonia + "'");
+               ResultSet rs = pst.executeQuery();
+               
+               if(rs.next()){
+                   //Datos consultados
+                   TxtFechaHora.setText(rs.getString("FECHA_HORA_LIMPIEZA"));
+                   TxtObservacion.setText(rs.getString("OBSERVACIONES"));
+                   //Leer el binario
+                   Blob blob = rs.getBlob(5);
+                   //Pasar el binario a imagen
+                   byte[] data = blob.getBytes(1, (int) blob.length());
+                   //lee la imagen
+                   BufferedImage img = null;
+                   try{
+                       img = ImageIO.read(new ByteArrayInputStream(data));
+                   }catch (IOException e){
+                       System.out.println("error en la consulta" + e);
+                   }
+                   ImageIcon icono = new ImageIcon(img);
+                   Icon imagen = new ImageIcon(icono.getImage().getScaledInstance(LblFoto.getWidth(), LblFoto.getHeight(), Image.SCALE_DEFAULT));
+                   LblFoto.setIcon(imagen);
+                   cn2.close();
+               }
+                                              
+            }catch (SQLException ex){
+              JOptionPane.showMessageDialog(null, "Error al obtener el registro!!");
+              System.out.println("error al obtener el registro: " + ex);
+            }
+            
+        }    
     }
 
     @Override
     public void Editar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+           if (listServicio.getSelectedValue().equals("") || TxtFechaHora.getText().equals("") ||  TxtObservacion.getText().equals("") || TxtColonia.getText().equals("")) {
+        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio y llenar todos los campos.");
+    } else {
+        int Servicio, Colonia;    
+        String FechaHora, Observaciones;
+
+        // Obtener los valores de los campos
+        Servicio = Integer.parseInt(listServicio.getSelectedValue());
+        Colonia = Integer.parseInt(TxtColonia.getText().trim());
+        FechaHora = TxtFechaHora.getText().trim();
+        Observaciones = TxtObservacion.getText().trim();
+
+        try {
+            cx3 = new Conexion("proyecto2");
+            Connection cn3 = cx3.Conectar();
+            PreparedStatement pst = cn3.prepareStatement("UPDATE limpieza SET FECHA_HORA_LIMPIEZA = ?, OBSERVACIONES = ?, IMAGEN = ? WHERE ID_SERVICIO = ? AND ID_COLONIAS = ?");
+            
+            // Establecer los valores de los parámetros
+            pst.setString(1, FechaHora);
+            pst.setString(2, Observaciones);
+            pst.setBlob(3, fis, longitudBytes); // Aquí estableces el valor de la imagen
+            
+            pst.setInt(4, Servicio);
+            pst.setInt(5, Colonia);
+
+            int resultado = pst.executeUpdate();
+            if (resultado > 0) {
+                JOptionPane.showMessageDialog(null, "El registro se ha actualizado con éxito.");
+                Limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo actualizar el registro.");
+            }
+
+            cn3.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al actualizar: " + ex);
+            JOptionPane.showMessageDialog(null, "Error al actualizar el registro en la base de datos.");
+        }
+    }
     }
 
     @Override
     public void Borrar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       if (listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("")) {
+        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio e insertar una colonia para borrar.");
+    } else {
+        int Servicio, Colonia;
+        Servicio = Integer.parseInt(listServicio.getSelectedValue());
+        Colonia = Integer.parseInt(TxtColonia.getText().trim());
+
+        try {
+            cx4 = new Conexion("proyecto2");
+            Connection cn4 = cx4.Conectar();
+            PreparedStatement pst = cn4.prepareStatement("DELETE FROM limpieza WHERE ID_SERVICIO = ? AND ID_COLONIAS = ?");
+            pst.setInt(1, Servicio);
+            pst.setInt(2, Colonia);
+
+            int resultado = pst.executeUpdate();
+            if (resultado > 0) {
+                JOptionPane.showMessageDialog(null, "El registro se ha eliminado con éxito.");
+                Limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro.");
+            }
+
+            cn4.close();
+        } catch (SQLException ex) {
+            System.out.println("Error al eliminar: " + ex);
+            JOptionPane.showMessageDialog(null, "Error al eliminar el registro de la base de datos.");
+        }
+    }
     }
 
     @Override
     public void Limpiar() {
-        
-        TxtServicio.setText("");
+        listServicio.clearSelection();
         TxtFechaHora.setText("");
-        TxtNombreServicio.setText("");
-        TxtDuracion.setText("");
-        TxtNCuadrilla.setText("");
         TxtColonia.setText("");
-        TxtDescripcion.setText("");
+        TxtObservacion.setText("");
         LblFoto.setText("Foto");
+        LblFoto.setIcon(null);
     }
 }
