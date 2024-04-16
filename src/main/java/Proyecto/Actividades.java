@@ -77,11 +77,15 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listCuadrilla = new javax.swing.JList<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         MBuscar = new javax.swing.JMenu();
         MAgregar = new javax.swing.JMenu();
         MEditar = new javax.swing.JMenu();
         MBorrar = new javax.swing.JMenu();
+        MLimpiar = new javax.swing.JMenu();
         MRegresar = new javax.swing.JMenu();
         MSalir = new javax.swing.JMenu();
 
@@ -152,6 +156,16 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
 
         jLabel5.setText(" asegurar que la informacion sea la correcta");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setText("ID_Cuadrilla");
+
+        listCuadrilla.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "1", "2", "3", "4", "5", "6" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(listCuadrilla);
+
         MBuscar.setText("Buscar");
         MBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -184,10 +198,37 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         });
         jMenuBar1.add(MBorrar);
 
+        MLimpiar.setText("Limpiar");
+        MLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MLimpiarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MLimpiar);
+
         MRegresar.setText("Regresar");
+        MRegresar.addMenuKeyListener(new javax.swing.event.MenuKeyListener() {
+            public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
+                MRegresarMenuKeyPressed(evt);
+            }
+            public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
+            }
+            public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
+            }
+        });
+        MRegresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MRegresarMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(MRegresar);
 
         MSalir.setText("Salir");
+        MSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MSalirMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(MSalir);
 
         setJMenuBar(jMenuBar1);
@@ -205,11 +246,7 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(IDColonia)
@@ -221,37 +258,59 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel2))
-                        .addContainerGap(15, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel4))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(jLabel4)
                                 .addGap(32, 32, 32)
                                 .addComponent(TxtFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7)
-                                .addGap(161, 161, 161))))))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane4)
+                                .addGap(32, 32, 32)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(20, 20, 20)
+                                        .addComponent(jLabel7)))
+                                .addGap(96, 96, 96))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel4)
                             .addComponent(TxtFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 26, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -265,14 +324,14 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(LblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jLabel2))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jButton1))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -321,6 +380,27 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
         Borrar();
     }//GEN-LAST:event_MBorrarMouseClicked
 
+    private void MRegresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MRegresarMouseClicked
+        // TODO add your handling code here:
+        Inicio i = new Inicio();
+        i.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_MRegresarMouseClicked
+
+    private void MSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MSalirMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_MSalirMouseClicked
+
+    private void MLimpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MLimpiarMouseClicked
+        // TODO add your handling code here:
+        Limpiar();
+    }//GEN-LAST:event_MLimpiarMouseClicked
+
+    private void MRegresarMenuKeyPressed(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_MRegresarMenuKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MRegresarMenuKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -366,6 +446,7 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
     private javax.swing.JMenu MBorrar;
     private javax.swing.JMenu MBuscar;
     private javax.swing.JMenu MEditar;
+    private javax.swing.JMenu MLimpiar;
     private javax.swing.JMenu MRegresar;
     private javax.swing.JMenu MSalir;
     private javax.swing.JTextField TxtColonia;
@@ -381,20 +462,23 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JList<String> listCuadrilla;
     private javax.swing.JList<String> listServicio;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void Agregar() {
-        if (listServicio.getSelectedValue().equals("") || TxtFechaHora.getText().equals("") ||  TxtObservacion.getText().equals("") || TxtColonia.getText().equals("")){
+        if (listServicio.getSelectedValue().equals("") || TxtFechaHora.getText().equals("") ||  TxtObservacion.getText().equals("") || TxtColonia.getText().equals("") || listCuadrilla.getSelectedValue().equals("")){
           JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
         }else{
-          int Servicio, Colonia;    
+          int Servicio, Colonia, Cuadrilla;    
           String FechaHora,Observaciones;
           
         // Definir el formato de fecha y hora que esperas
@@ -406,17 +490,19 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
          Servicio=Integer.parseInt(listServicio.getSelectedValue());
          Colonia=Integer.parseInt(TxtColonia.getText().trim());
          Observaciones = TxtObservacion.getText().trim();
+         Cuadrilla=Integer.parseInt(listCuadrilla.getSelectedValue());
             
          try{
              
              cx=new Conexion("proyecto2");
              Connection cn=cx.Conectar();
-             PreparedStatement pst = cn.prepareStatement("insert into limpieza values (?,?,?,?,?)");
+             PreparedStatement pst = cn.prepareStatement("insert into limpieza values (?,?,?,?,?,?)");
              pst.setInt(1,Servicio);
              pst.setInt(2, Colonia);
-             pst.setString(3, FechaHora);
-             pst.setString(4, Observaciones);
-             pst.setBlob(5, fis, longitudBytes);
+             pst.setInt(3, Cuadrilla);
+             pst.setString(4, FechaHora);
+             pst.setString(5, Observaciones);
+             pst.setBlob(6, fis, longitudBytes);
              
              pst.executeUpdate();
              cn.close();
@@ -432,25 +518,28 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
     }
     @Override
     public void Buscar() {
-        if(listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio y insertar una colonia");
+        if(listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("") || listCuadrilla.getSelectedValue().equals("")){
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio ,insertar una colonia y seleccionar una cuadrilla");
         }else{
             
             try{
                String id_s = "";
                String id_c = "";
+               String id_cu = "";
                
                id_s = listServicio.getSelectedValue();
                id_c = TxtColonia.getText().trim();
+               id_cu = listCuadrilla.getSelectedValue();
                //parseo
-               int Servicio,Colonia;
+               int Servicio,Colonia,Cuadrilla;
                
                Servicio = Integer.parseInt(id_s);
                Colonia = Integer.parseInt(id_c);
+               Cuadrilla = Integer.parseInt(id_cu);
                
                cx2= new Conexion("Proyecto2");
                Connection cn2=cx2.Conectar();
-               PreparedStatement pst = cn2.prepareStatement("select * from limpieza where ID_SERVICIO = '" + Servicio + "' AND ID_COLONIAS = '" + Colonia + "'");
+               PreparedStatement pst = cn2.prepareStatement("select * from limpieza where ID_SERVICIO = '" + Servicio + "' AND ID_COLONIAS = '" + Colonia + "' AND ID_CUADRILLA = '" + Cuadrilla + "'");
                ResultSet rs = pst.executeQuery();
                
                if(rs.next()){
@@ -484,75 +573,90 @@ public class Actividades extends javax.swing.JFrame  implements CRUD{
 
     @Override
     public void Editar() {
-           if (listServicio.getSelectedValue().equals("") || TxtFechaHora.getText().equals("") ||  TxtObservacion.getText().equals("") || TxtColonia.getText().equals("")) {
-        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio y llenar todos los campos.");
+          if (listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("") || listCuadrilla.getSelectedValue().equals("")) {
+        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio, insertar una colonia y seleccionar una cuadrilla");
     } else {
-        int Servicio, Colonia;    
-        String FechaHora, Observaciones;
-
-        // Obtener los valores de los campos
-        Servicio = Integer.parseInt(listServicio.getSelectedValue());
-        Colonia = Integer.parseInt(TxtColonia.getText().trim());
-        FechaHora = TxtFechaHora.getText().trim();
-        Observaciones = TxtObservacion.getText().trim();
-
         try {
-            cx3 = new Conexion("proyecto2");
-            Connection cn3 = cx3.Conectar();
-            PreparedStatement pst = cn3.prepareStatement("UPDATE limpieza SET FECHA_HORA_LIMPIEZA = ?, OBSERVACIONES = ?, IMAGEN = ? WHERE ID_SERVICIO = ? AND ID_COLONIAS = ?");
+            String id_s = listServicio.getSelectedValue();
+            String id_c = TxtColonia.getText().trim();
+            String id_cu = listCuadrilla.getSelectedValue();
             
-            // Establecer los valores de los parámetros
-            pst.setString(1, FechaHora);
-            pst.setString(2, Observaciones);
-            pst.setBlob(3, fis, longitudBytes); // Aquí estableces el valor de la imagen
+            // Parseo de valores
+            int Servicio = Integer.parseInt(id_s);
+            int Colonia = Integer.parseInt(id_c);
+            int Cuadrilla = Integer.parseInt(id_cu);
+            
+            // Realizar la conexión y la consulta
+            cx3 = new Conexion("Proyecto2");
+            Connection cn3 = cx3.Conectar();
+            PreparedStatement pst = cn3.prepareStatement("UPDATE limpieza SET FECHA_HORA_LIMPIEZA = ?, OBSERVACIONES = ?, IMAGEN = ? WHERE ID_SERVICIO = ? AND ID_COLONIAS = ? AND ID_CUADRILLA = ?");
+            
+            // Asignar valores a los parámetros
+            pst.setString(1, TxtFechaHora.getText().trim());
+            pst.setString(2, TxtObservacion.getText().trim());
+            pst.setBlob(3, fis, longitudBytes); // Asegúrate de tener definidos estos valores antes
             
             pst.setInt(4, Servicio);
             pst.setInt(5, Colonia);
-
-            int resultado = pst.executeUpdate();
-            if (resultado > 0) {
-                JOptionPane.showMessageDialog(null, "El registro se ha actualizado con éxito.");
+            pst.setInt(6, Cuadrilla);
+            
+            // Ejecutar la actualización
+            int rowsAffected = pst.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Registro actualizado con éxito");
                 Limpiar();
             } else {
-                JOptionPane.showMessageDialog(null, "No se pudo actualizar el registro.");
+                JOptionPane.showMessageDialog(null, "No se pudo actualizar el registro");
             }
-
+            
             cn3.close();
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar: " + ex);
-            JOptionPane.showMessageDialog(null, "Error al actualizar el registro en la base de datos.");
+            JOptionPane.showMessageDialog(null, "Error al actualizar el registro");
+            System.out.println("Error al actualizar el registro: " + ex);
         }
     }
     }
 
     @Override
     public void Borrar() {
-       if (listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("")) {
-        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio e insertar una colonia para borrar.");
+     if (listServicio.getSelectedValue().equals("") || TxtColonia.getText().equals("") || listCuadrilla.getSelectedValue().equals("")) {
+        JOptionPane.showMessageDialog(null, "Debes seleccionar un servicio, insertar una colonia y seleccionar una cuadrilla");
     } else {
-        int Servicio, Colonia;
-        Servicio = Integer.parseInt(listServicio.getSelectedValue());
-        Colonia = Integer.parseInt(TxtColonia.getText().trim());
-
         try {
-            cx4 = new Conexion("proyecto2");
+            String id_s = listServicio.getSelectedValue();
+            String id_c = TxtColonia.getText().trim();
+            String id_cu = listCuadrilla.getSelectedValue();
+            
+            // Parseo de valores
+            int Servicio = Integer.parseInt(id_s);
+            int Colonia = Integer.parseInt(id_c);
+            int Cuadrilla = Integer.parseInt(id_cu);
+            
+            // Realizar la conexión y la consulta
+            cx4 = new Conexion("Proyecto2");
             Connection cn4 = cx4.Conectar();
-            PreparedStatement pst = cn4.prepareStatement("DELETE FROM limpieza WHERE ID_SERVICIO = ? AND ID_COLONIAS = ?");
+            PreparedStatement pst = cn4.prepareStatement("DELETE FROM limpieza WHERE ID_SERVICIO = ? AND ID_COLONIAS = ? AND ID_CUADRILLA = ?");
+            
+            // Asignar valores a los parámetros
             pst.setInt(1, Servicio);
             pst.setInt(2, Colonia);
-
-            int resultado = pst.executeUpdate();
-            if (resultado > 0) {
-                JOptionPane.showMessageDialog(null, "El registro se ha eliminado con éxito.");
-                Limpiar();
+            pst.setInt(3, Cuadrilla);
+            
+            // Ejecutar la eliminación
+            int rowsAffected = pst.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Registro eliminado con éxito");
+                Limpiar(); // Si deseas limpiar los campos después de eliminar el registro
             } else {
-                JOptionPane.showMessageDialog(null, "No se pudo eliminar el registro.");
+                JOptionPane.showMessageDialog(null, "No se encontró el registro para eliminar");
             }
-
+            
             cn4.close();
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar: " + ex);
-            JOptionPane.showMessageDialog(null, "Error al eliminar el registro de la base de datos.");
+            JOptionPane.showMessageDialog(null, "Error al eliminar el registro");
+            System.out.println("Error al eliminar el registro: " + ex);
         }
     }
     }

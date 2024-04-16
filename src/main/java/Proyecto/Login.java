@@ -116,6 +116,7 @@ Conexion cx;
             JOptionPane.showConfirmDialog(this, "Bienvenido a cuadrillas de limpieza");
              Inicio i = new Inicio();
              i.setVisible(true);
+             this.dispose();
         }
         else{
             JOptionPane.showConfirmDialog(this, "Usuario y/o contraseña incorrectos vuelva a intentar");

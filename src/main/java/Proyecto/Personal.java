@@ -4,17 +4,25 @@
  */
 package Proyecto;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Warwin02
  */
-public class Personal extends javax.swing.JFrame {
+public class Personal extends javax.swing.JFrame implements CRUD{
 
-    /**
-     * Creates new form Personal
-     */
+    Conexion cx;
+    
     public Personal() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setTitle("Personal");
+        this.setResizable(false);
     }
 
     /**
@@ -26,21 +34,208 @@ public class Personal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu6 = new javax.swing.JMenu();
+        jLabel1 = new javax.swing.JLabel();
+        txtPersonal = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        cmbPuesto = new javax.swing.JComboBox<>();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        MBuscar = new javax.swing.JMenu();
+        MAgregar = new javax.swing.JMenu();
+        MEditar = new javax.swing.JMenu();
+        MBorrar = new javax.swing.JMenu();
+        MLimpiar = new javax.swing.JMenu();
+        MRegresar = new javax.swing.JMenu();
+        MSalir = new javax.swing.JMenu();
+
+        jMenu6.setText("jMenu6");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("ID_Personal");
+
+        jLabel2.setText("ID_Puesto");
+
+        jLabel3.setText("Nombre");
+
+        jLabel4.setText("Apellido");
+
+        jLabel5.setText("Telefono");
+
+        jLabel6.setText("Email");
+
+        cmbPuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2" }));
+
+        MBuscar.setText("Buscar");
+        MBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MBuscarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MBuscar);
+
+        MAgregar.setText("Agregar");
+        MAgregar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MAgregarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MAgregar);
+
+        MEditar.setText("Editar");
+        MEditar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MEditarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MEditar);
+
+        MBorrar.setText("Borrar");
+        MBorrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MBorrarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MBorrar);
+
+        MLimpiar.setText("Limpiar");
+        MLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MLimpiarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MLimpiar);
+
+        MRegresar.setText("Regresar");
+        MRegresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MRegresarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MRegresar);
+
+        MSalir.setText("Salir");
+        MSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MSalirMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(MSalir);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                            .addComponent(txtEmail)
+                            .addComponent(txtApellido))
+                        .addGap(157, 157, 157))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtNombre)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(cmbPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void MAgregarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MAgregarMouseClicked
+        // TODO add your handling code here:
+        Agregar();
+    }//GEN-LAST:event_MAgregarMouseClicked
+
+    private void MBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MBuscarMouseClicked
+        // TODO add your handling code here:
+        Buscar();
+    }//GEN-LAST:event_MBuscarMouseClicked
+
+    private void MEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MEditarMouseClicked
+        // TODO add your handling code here:
+        Editar();
+    }//GEN-LAST:event_MEditarMouseClicked
+
+    private void MBorrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MBorrarMouseClicked
+        // TODO add your handling code here:
+        Borrar();
+    }//GEN-LAST:event_MBorrarMouseClicked
+
+    private void MLimpiarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MLimpiarMouseClicked
+        // TODO add your handling code here:
+        Limpiar();
+    }//GEN-LAST:event_MLimpiarMouseClicked
+
+    private void MRegresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MRegresarMouseClicked
+        // TODO add your handling code here:
+        Inicio i = new Inicio();
+        i.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_MRegresarMouseClicked
+
+    private void MSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MSalirMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_MSalirMouseClicked
 
     /**
      * @param args the command line arguments
@@ -68,9 +263,6 @@ public class Personal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Personal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -81,5 +273,198 @@ public class Personal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu MAgregar;
+    private javax.swing.JMenu MBorrar;
+    private javax.swing.JMenu MBuscar;
+    private javax.swing.JMenu MEditar;
+    private javax.swing.JMenu MLimpiar;
+    private javax.swing.JMenu MRegresar;
+    private javax.swing.JMenu MSalir;
+    private javax.swing.JComboBox<String> cmbPuesto;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPersonal;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void Agregar() {
+        if (txtPersonal.getText().equals("") || cmbPuesto.getSelectedItem().equals("") ||  txtNombre.getText().equals("") || txtApellido.getText().equals("") || txtTelefono.getText().equals("") || txtEmail.getText().equals("")){
+          JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
+        }else{
+          int Personal, Puesto;    
+          String Nombre,Apellido,Telefono,Email;
+          
+         
+        // Definir el formato de fecha que esperas
+        
+        
+         Personal=Integer.parseInt(txtPersonal.getText().trim());
+         Puesto=Integer.parseInt(cmbPuesto.getSelectedItem().toString());
+         Nombre = txtNombre.getText().trim();
+         Apellido = txtApellido.getText().trim();
+         Telefono = txtTelefono.getText().trim();
+         Email = txtEmail.getText().trim();
+            
+         try{
+             
+             cx=new Conexion("proyecto2");
+             Connection cn=cx.Conectar();
+             PreparedStatement pst = cn.prepareStatement("insert into personal values (?,?,?,?,?,?)");
+             pst.setInt(1,Personal);
+             pst.setInt(2,Puesto);
+             pst.setString(3,Nombre);
+             pst.setString(4,Apellido);
+             pst.setString(5,Telefono);
+             pst.setString(6,Email);
+             
+             pst.executeUpdate();
+             cn.close();
+             JOptionPane.showMessageDialog(null, "El registro fue insertado con exito");
+             Limpiar();
+             
+         }catch(SQLException e){
+             System.out.println("error al guardar" + e);
+             JOptionPane.showMessageDialog(null, "Errores en la inserccion!!");
+         }
+        
+        }
+    }
+
+    @Override
+    public void Buscar() {
+        if (txtPersonal.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Debes ingresar el ID de personal para buscar");
+        return;
+    }
+    
+    try {
+        int idPersonal = Integer.parseInt(txtPersonal.getText().trim());
+        cx = new Conexion("proyecto2");
+        Connection cn = cx.Conectar();
+        PreparedStatement pst = cn.prepareStatement("SELECT * FROM personal WHERE id_personal = ?");
+        pst.setInt(1, idPersonal);
+        ResultSet rs = pst.executeQuery();
+        
+        if (rs.next()) {
+            // Si se encontró el registro, mostrar los datos en los campos correspondientes
+            
+            cmbPuesto.setSelectedItem(rs.getString("id_puesto"));
+            txtNombre.setText(rs.getString("NOMBRE"));
+            txtApellido.setText(rs.getString("APELLIDO"));
+            txtTelefono.setText(rs.getString("TELEFONO"));
+            txtEmail.setText(rs.getString("EMAIL"));
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún registro con el ID de personal proporcionado");
+        }
+        
+        cn.close();
+    } catch (SQLException e) {
+        System.out.println("Error al buscar el registro: " + e);
+        JOptionPane.showMessageDialog(null, "Error al buscar el registro");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "El ID de personal debe ser un número");
+    }
+    }
+
+    @Override
+    public void Editar() {
+            if (txtPersonal.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Debes ingresar el ID de personal para editar");
+        return;
+    }
+    
+    try {
+        int idPersonal = Integer.parseInt(txtPersonal.getText().trim());
+        cx = new Conexion("proyecto2");
+        Connection cn = cx.Conectar();
+        PreparedStatement pst = cn.prepareStatement("SELECT * FROM personal WHERE id_personal = ?");
+        pst.setInt(1, idPersonal);
+        ResultSet rs = pst.executeQuery();
+        
+        if (rs.next()) {
+            // Si se encontró el registro, permitir la edición de los datos
+            int idPuesto = Integer.parseInt(cmbPuesto.getSelectedItem().toString());
+            String nombre = txtNombre.getText().trim();
+            String apellido = txtApellido.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String email = txtEmail.getText().trim();
+            
+            PreparedStatement pstUpdate = cn.prepareStatement("UPDATE personal SET id_puesto = ?, NOMBRE = ?, APELLIDO = ?, TELEFONO = ?, EMAIL = ? WHERE id_personal = ?");
+            pstUpdate.setInt(1, idPuesto);
+            pstUpdate.setString(2, nombre);
+            pstUpdate.setString(3, apellido);
+            pstUpdate.setString(4, telefono);
+            pstUpdate.setString(5, email);
+            pstUpdate.setInt(6, idPersonal);
+            
+            int rowsAffected = pstUpdate.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Registro actualizado con éxito");
+                Limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo actualizar el registro");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún registro con el ID de personal proporcionado");
+        }
+        
+        cn.close();
+    } catch (SQLException e) {
+        System.out.println("Error al editar el registro: " + e);
+        JOptionPane.showMessageDialog(null, "Error al editar el registro");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "El ID de personal debe ser un número");
+    }
+    }
+
+    @Override
+    public void Borrar() {
+        if (txtPersonal.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Debes ingresar el ID de personal para borrar");
+        return;
+    }
+    
+    try {
+        int idPersonal = Integer.parseInt(txtPersonal.getText().trim());
+        cx = new Conexion("proyecto2");
+        Connection cn = cx.Conectar();
+        PreparedStatement pst = cn.prepareStatement("DELETE FROM personal WHERE id_personal = ?");
+        pst.setInt(1, idPersonal);
+        
+        int rowsAffected = pst.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Registro eliminado con éxito");
+            Limpiar();
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún registro con el ID de personal proporcionado");
+        }
+        
+        cn.close();
+    } catch (SQLException e) {
+        System.out.println("Error al borrar el registro: " + e);
+        JOptionPane.showMessageDialog(null, "Error al borrar el registro");
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "El ID de personal debe ser un número");
+    }
+    }
+
+    @Override
+    public void Limpiar() {
+        txtPersonal.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtTelefono.setText("");
+        txtEmail.setText("");
+        cmbPuesto.setSelectedIndex(-1);
+    }
 }
